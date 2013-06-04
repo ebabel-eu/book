@@ -9,8 +9,6 @@ namespace.book = function (properties) {
 
     if (properties && properties.title) {
         that.title = properties.title;
-    } else {
-        namespace.log({ messages: [{ message: "Missing title.", messageType: "error" }] });
     }
 
     return that;
@@ -65,7 +63,7 @@ namespace.log = function (properties) {
     "use strict";
     var that = {};
 
-    that.write = function (message, messageType) {
+    var write = function (message, messageType) {
 
         if (!message) {
             message = "Message to log is missing.";
@@ -84,12 +82,12 @@ namespace.log = function (properties) {
     };
 
     if (!properties || !properties.messages) {
-        that.write("Constructor has no messages to log.", "error");
+        write("Constructor has no messages to log.", "error");
     }
 
     if (properties && properties.messages) {
         properties.messages.forEach(function (messageObject) {
-            that.write(messageObject.message, messageObject.messageType);
+            write(messageObject.message, messageObject.messageType);
         });
     }
 
@@ -104,31 +102,3 @@ namespace.data = {
         namespace.book() // Error: this book has no title. This error is reported by the "Missing title" error message.
     ]
 };
-
-// todo: use Jasmine to test my code instead of logging messages with namespace.log()
-
-// UI implementation.
-namespace.log({
-    messages: [
-        { message: namespace.data.books[0].title, messageType: "info" },
-        { message: namespace.data.books[2].title, messageType: "info" }, // Error: the anonymous book has no title. This error is reported by the "Message to log is missing" error message.
-        { message: namespace.data.books[1].title, messageType: "info" },
-        { message: "Message without a default message type." }
-    ]
-});
-namespace.log(); // Error: there is no message to log. This error is reported by the "Constructor has no messages to log" error message.
-
-// Query data that does exist.
-namespace.log({
-    messages: [
-        { message: namespace.query({ collection: namespace.data.books, filterBy: "title", filteredValue: "Hauts des Hurlevents" }).results.length, messageType: "query" },
-        { message: namespace.query({ collection: namespace.data.books, filterBy: "title", filteredValue: "Hauts des Hurlevents" }).first().title, messageType: "query" }
-    ]
-});
-
-// Query data that doesn't exist.
-namespace.log({
-    messages: [
-        { message: namespace.query({ collection: namespace.data.books, filterBy: "title", filteredValue: "Book title that will not be found" }).first().title, messageType: "query" } // this also triggers a "no message to log" type of error because title is undefined since first returned an empty object.
-    ]
-});
