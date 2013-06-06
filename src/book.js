@@ -20,6 +20,7 @@ namespace.query = function (properties) {
 
     that.results = [];
 
+    // todo: consider making findResults private with a var instead of the public that.findResults.
     that.findResults = function (list, filterBy, filteredValue) {
         var results = [], i;
 
@@ -32,13 +33,13 @@ namespace.query = function (properties) {
         return results;
     };
 
-    // todo: first() has a dependency on findResults() - is that good quality code? Think about whether this should be refactored so that first can be called on its own.
     that.first = function () {
-        var result = {}, i;
+        var result, i;
 
+        // todo: first() has a dependency on findResults() - is that good quality code? Think about whether this should be refactored so that first can be called on its own.
         if (!that.results || that.results.length === 0) {
             namespace.log({ messages: [{ message: "No data can be found.", messageType: "error" }] });
-            return {};
+            return undefined;
         }
 
         for (i = 0; i < that.results.length; i += 1) {
@@ -59,6 +60,17 @@ namespace.query = function (properties) {
     return that;
 };
 
+// Data layer.
+namespace.data = {
+    books: [
+        namespace.book({ title: "Wuthering Heights" }),
+        namespace.book({ title: "Hauts des Hurlevents" }),
+        namespace.book() // Error: this book has no title. This error is reported by the "Missing title" error message.
+    ]
+};
+
+// Presentation layer.
+// todo: consider logging to an ajax call and a database instead of outputting to the client console.
 namespace.log = function (properties) {
     "use strict";
     var that = {};
@@ -92,13 +104,4 @@ namespace.log = function (properties) {
     }
 
     return that;
-};
-
-// Data layer.
-namespace.data = {
-    books: [
-        namespace.book({ title: "Wuthering Heights" }),
-        namespace.book({ title: "Hauts des Hurlevents" }),
-        namespace.book() // Error: this book has no title. This error is reported by the "Missing title" error message.
-    ]
 };
