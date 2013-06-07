@@ -36,11 +36,11 @@ namespace.book = function ( properties ) {
 
 namespace.query = function ( properties ) {
     "use strict";
-    var that = {};
+    var that = {}, findResults;
 
     that.results = [];
 
-    var findResults = function ( list, filterBy, filteredValue ) {
+    findResults = function ( list, filterBy, filteredValue ) {
         var results = [], i;
 
         for ( i = 0; i < list.length; i += 1 ) {
@@ -91,9 +91,9 @@ namespace.data = {
 // todo: consider logging to an ajax call and a database instead of outputting to the client console.
 namespace.log = function ( properties ) {
     "use strict";
-    var that = {};
+    var that = {}, write;
 
-    var write = function ( message, messageType ) {
+    write = function ( message, messageType ) {
 
         if ( !message ) {
             message = "Message to log is missing.";
