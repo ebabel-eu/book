@@ -1,19 +1,19 @@
 ﻿/*jslint browser: true */
 /*jslint todo: true */
-/*jslint white: true */
 var namespace = {}; // Replace the name "namespace" with your own namespace, i.e. domain name of your company for example, because it's unlikely to clash with someone else's library.
 
 // Class library.
 namespace.book = function ( properties ) {
     "use strict";
-    var that = {};
+    var that = { errors: [] };
 
     if ( !properties ) {
-        return undefined;
+        that.errors.push( namespace.error( { code: 1 } ) );
+        return that;
     }
 
     if ( !properties.title && !properties.isbn10 && !properties.isbn13 && !properties.cultureCode ) {
-        return undefined;
+        that.errors.push( namespace.error( { code: 3 } ) );
     }
 
     if ( properties.title ) {
@@ -31,6 +31,30 @@ namespace.book = function ( properties ) {
     if ( properties.cultureCode ) {
         that.cultureCode = properties.cultureCode;
     }
+
+    return that;
+};
+
+namespace.error = function ( properties ) {
+    "use strict";
+    var that = { errors: [] }, getMessage;
+
+    if ( !properties ) {
+        that.errors.push( namespace.error( { code: 1 } ) );
+        return that;
+    }
+
+    that.code = ( properties.code ) ? properties.code : 2;
+
+    getMessage = function ( code ) {
+        if ( code === 1 ) { return "No properties."; }
+        if ( code === 2 ) { return "Missing error code."; }
+        if ( code === 3 ) { return "At least one property member is required."; }
+
+        return "Unexpected error code.";
+    };
+
+    that.message = getMessage( that.code );
 
     return that;
 };
