@@ -1,10 +1,10 @@
 describe( "Namespace", function () {
 
     it( "exists.", function () {
-        expect( namespace ).toBeTruthy();
+        expect( namespace ).toBeDefined();
     } );
 
-    it( "is not an empty object.", function () {
+    it( "is not its initial default value, i.e. an empty object.", function () {
         expect( namespace ).toNotBe( {} );
     } );
 

@@ -1,5 +1,6 @@
 ﻿/*jslint browser: true */
 /*jslint todo: true */
+/*jslint white: true */
 var namespace = {}; // Replace the name "namespace" with your own namespace, i.e. domain name of your company for example, because it's unlikely to clash with someone else's library.
 
 // Class library.
