@@ -72,21 +72,26 @@ namespace.query = function (properties) {
             }
         }
 
+        if (results.length === 0) {
+            that.errors.push(namespace.error({ code: 4 }));
+        }
+
         return results;
     };
 
     that.first = function () {
-        var result, i;
+        var result = {}, i;
 
-        if (!that.results || that.results.length === 0) {
-            that.errors.push(namespace.error({ code: 4 }));
-        } else {
+        if (that.results.length > 0) {
             for (i = 0; i < that.results.length; i += 1) {
                 if (that.results[i]) {
                     result = that.results[i];
                 }
             }
         }
+
+        // Copy the errors of the parent function so they be consulted when first() is called and returns an object.
+        result.errors = that.errors;
 
         return result;
     };
