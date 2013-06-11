@@ -11,14 +11,23 @@ namespace.error = function (properties) {
         return that;
     }
 
-    that.code = properties.code || 2;
+    if (!properties.code && properties.code !== 0) {
+        that.errors.push(namespace.error({ code: 2 }));
+        return that;
+    }
 
     getMessage = function (code) {
         var error = namespace.query({ collection: namespace.data.errors, filterBy: "code", filteredValue: code }).first();
 
-        return error ? error.message : namespace.query({ collection: namespace.data.errors, filterBy: "code", filteredValue: 6 }).first().message;
+        if (!error.dataFound) {
+            that.errors.push(namespace.error({ code: 6 }));
+            return namespace.query({ collection: namespace.data.errors, filterBy: "code", filteredValue: 6 }).first().message;
+        }
+
+        return error.message;
     };
 
+    that.code = properties.code;
     that.message = getMessage(that.code);
 
     return that;
@@ -62,6 +71,7 @@ namespace.query = function (properties) {
     var that = { errors: [] }, findResults;
 
     that.results = [];
+    that.dataFound = false;
 
     findResults = function (list, filterBy, filteredValue) {
         var results = [], i;
@@ -74,6 +84,10 @@ namespace.query = function (properties) {
 
         if (results.length === 0) {
             that.errors.push(namespace.error({ code: 4 }));
+        }
+
+        if (results.length > 0) {
+            that.dataFound = true;
         }
 
         return results;
@@ -90,8 +104,9 @@ namespace.query = function (properties) {
             }
         }
 
-        // Copy the errors of the parent function so they be consulted when first() is called and returns an object.
+        // The parent function public members are copie so that they can be consulted when first() is called and returns an object.
         result.errors = that.errors;
+        result.dataFound = that.dataFound;
 
         return result;
     };

@@ -85,3 +85,19 @@ describe("Data query", function () {
     });
 
 });
+
+describe("Error function", function () {
+
+    it("should return an error code 1 \"No properties\" when it isn't supplied with any parameter.", function () {
+        expect(namespace.query({ collection: namespace.error().errors, filterBy: "code", filteredValue: 1 }).first().code).toBe(1);
+    });
+
+    it("should return an error code 2 \"Missing error code\" when it isn't supplied with an error code.", function () {
+        expect(namespace.query({ collection: namespace.error({}).errors, filterBy: "code", filteredValue: 2 }).first().code).toBe(2);
+    });
+
+    it("should return an error code 6 \"Unexpected error code\" when it is supplied with an error code that doesn't exist.", function () {
+        expect(namespace.query({ collection: namespace.error({ code: 999 }).errors, filterBy: "code", filteredValue: 6 }).first().code).toBe(6);
+    });
+
+});
