@@ -28,16 +28,21 @@ describe( "Book function", function () {
         expect( namespace.book( { title: "A Practitioner's Guide to Software Test Design" } ).title ).toBe( "A Practitioner's Guide to Software Test Design" );
     } );
 
-    it( "should return at least one error when it isn't supplied with any parameter.", function () {
-        expect( namespace.book().errors.length ).toBeGreaterThan( 0 );
+    it( "should return an error code 1 \"No properties\" when it isn't supplied with any parameter.", function () {
+        expect( namespace.query( { collection: namespace.book().errors, filterBy: "code", filteredValue: 1 } ).first().code ).toBe( 1 );
     } );
 
-    it( "should return at least one error when it isn't supplied with at least one valid parameter.", function () {
-        expect( namespace.book( {} ).errors.length ).toBeGreaterThan( 0 );
+    it( "should return an error code 3 \"At least one property member is required.\" when it isn't supplied with at least one valid parameter.", function () {
+        expect( namespace.query( { collection: namespace.book( {} ).errors, filterBy: "code", filteredValue: 3 } ).first().code ).toBe( 3 );
     } );
 
-    it( "should return at least one error when it is supplied with an unexpected parameter but no valid parameter.", function () {
-        expect( namespace.book( { unexpectedParameter: "Unexpected value." } ).errors.length ).toBeGreaterThan( 0 );
+    it( "should return an error code 3 \"At least one property member is required.\" when it is supplied with no valid parameter but an unexpected parameter instead.", function () {
+        expect( namespace.query( { collection: namespace.book( { unexpectedParameter: "Unexpected value." } ).errors, filterBy: "code", filteredValue: 3 } ).first().code ).toBe( 3 );
+    } );
+
+    it( "should return an object with all the expected members that have been supplied as properties.", function () {
+        var book = namespace.book( { title: "Some title", isbn10: "short isbn", isbn13: "long isbn", cultureCode: "en-US" } );
+        expect( book && book.title && book.isbn10 && book.isbn13 && book.cultureCode ).toBeTruthy();
     } );
 
 } );
@@ -69,7 +74,6 @@ describe( "Data query", function () {
     } );
 
 } );
-
 
 
 

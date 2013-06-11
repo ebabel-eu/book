@@ -35,6 +35,7 @@ namespace.book = function (properties) {
 
     if (!properties.title && !properties.isbn10 && !properties.isbn13 && !properties.cultureCode) {
         that.errors.push(namespace.error({ code: 3 }));
+        return that;
     }
 
     if (properties.title) {
